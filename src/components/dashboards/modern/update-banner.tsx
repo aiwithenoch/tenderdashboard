@@ -23,7 +23,7 @@ const simulationSteps = [
     action: 'View company profile',
   },
   {
-    text: 'A personalised tender email was sent to Khensani Ndlozi with the deadline and next action',
+    text: 'A personalised tender email was sent to Ama Serwaa Mensah with the deadline and next action',
     href: '/applications',
     action: 'Open application',
   },
@@ -38,7 +38,7 @@ const simulationSteps = [
     action: 'Review bid package',
   },
   {
-    text: 'Khensani Ndlozi approved the bid and Kato Ssemanda moved it into submission tracking',
+    text: 'Ama Serwaa Mensah approved the bid and Kato Ssemanda moved it into submission tracking',
     href: '/submissions',
     action: 'Track submission',
   },
@@ -58,33 +58,37 @@ export default function UpdateBanner() {
 
   return (
     <DashboardCard className="py-3">
-      <CardContent className="flex items-center flex-wrap justify-between gap-3">
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-chart-1 animate-ping absolute inline-flex" />
-            <span className="h-2 w-2 rounded-full bg-chart-1 absolute inline-flex" />
-            <p className="text-sm font-medium ps-4">Live Simulation</p>
-            <span className="w-1 h-1 rounded-full bg-border" />
+      <CardContent className="flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-chart-1 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-chart-1" />
+            </span>
+            <p className="text-sm font-medium">Live Simulation</p>
+            <span className="h-1 w-1 shrink-0 rounded-full bg-border" />
             <p className="text-sm font-normal text-muted-foreground">
               Step {step + 1} of {simulationSteps.length}
             </p>
           </div>
-          <p className="text-sm font-normal">{activeStep.text}</p>
+          <p className="mt-1 text-sm font-normal leading-5">{activeStep.text}</p>
         </div>
-        <div className="flex items-center gap-2">
+
+        <div className="flex w-full shrink-0 items-center gap-2 sm:w-auto">
           <Button
             variant="outline"
-            className="h-auto rounded-md px-3 py-2 cursor-pointer"
+            className="h-9 flex-1 rounded-md px-3 sm:flex-none"
             onClick={() => setStep((current) => (current + 1) % simulationSteps.length)}
           >
             Next
           </Button>
-          <Link to={activeStep.href}>
-            <Button className="flex gap-1.5 px-4 py-2 h-auto rounded-md cursor-pointer">
-              {activeStep.action}
-              <ArrowRight width={18} height={18} />
-            </Button>
-          </Link>
+          <Button
+            render={<Link to={activeStep.href} />}
+            className="h-9 flex-1 gap-1.5 rounded-md px-4 sm:flex-none"
+          >
+            {activeStep.action}
+            <ArrowRight width={18} height={18} />
+          </Button>
         </div>
       </CardContent>
     </DashboardCard>
