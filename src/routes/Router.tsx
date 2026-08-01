@@ -3,7 +3,7 @@ import { Navigate, createBrowserRouter } from "react-router";
 import Loadable from "../layouts/full/shared/loadable/Loadable";
 
 const ModernDashboard = Loadable(lazy(() => import("../views/dashboards/modern")));
-const SimulationLanding = Loadable(lazy(() => import("../views/simulation")));
+const SimulationLanding = Loadable(lazy(() => import("../views/simulation-safe")));
 
 const router = createBrowserRouter([
   {
