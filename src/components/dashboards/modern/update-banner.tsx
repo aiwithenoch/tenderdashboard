@@ -1,22 +1,52 @@
 'use client'
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router';
 import { CardContent } from '@/components/ui/card';
 import { DashboardCard } from '../../shared/dashboard-card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 
 const simulationSteps = [
-  'Scanning GHANEPS, South Africa eTenders, Kenya e-GP, AfDB and UNGM',
-  'New PPE tender detected from Tema Metropolitan Assembly',
-  'Company profile checked — 94% qualification match',
-  'Personalised tender alert sent to the tender manager by email',
-  'Tender requirements opened and one missing document identified',
-  'Technical response, checklist and bid package prepared for review',
-  'Application moved to management approval and submission tracking',
+  {
+    text: 'Aline Uwimana is scanning GHANEPS, South Africa eTenders, Kenya e-GP, AfDB and UNGM',
+    href: '/tenders',
+    action: 'View discovery',
+  },
+  {
+    text: 'A new PPE tender was detected from Tema Metropolitan Assembly',
+    href: '/tenders',
+    action: 'Open opportunity',
+  },
+  {
+    text: 'Ama Serwaa Mensah checked the company profile and confirmed a 94% qualification match',
+    href: '/company-profile',
+    action: 'View company profile',
+  },
+  {
+    text: 'A personalised tender email was sent to Khensani Ndlozi with the deadline and next action',
+    href: '/applications',
+    action: 'Open application',
+  },
+  {
+    text: 'Thabo Mokoena opened the requirements and identified one missing insurance document',
+    href: '/documents',
+    action: 'Open document vault',
+  },
+  {
+    text: 'Amina Njoroge prepared the technical response, checklist and bid package for review',
+    href: '/approvals',
+    action: 'Review bid package',
+  },
+  {
+    text: 'Khensani Ndlozi approved the bid and Kato Ssemanda moved it into submission tracking',
+    href: '/submissions',
+    action: 'Track submission',
+  },
 ];
 
 export default function UpdateBanner() {
   const [step, setStep] = useState(0);
+  const activeStep = simulationSteps[step];
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -39,16 +69,23 @@ export default function UpdateBanner() {
               Step {step + 1} of {simulationSteps.length}
             </p>
           </div>
-          <p className="text-sm font-normal">{simulationSteps[step]}</p>
+          <p className="text-sm font-normal">{activeStep.text}</p>
         </div>
-        <Button
-          variant="outline"
-          className="flex gap-1.5 px-4 py-2 h-auto rounded-md cursor-pointer"
-          onClick={() => setStep((current) => (current + 1) % simulationSteps.length)}
-        >
-          Next Step
-          <ArrowRight width={18} height={18} />
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            className="h-auto rounded-md px-3 py-2 cursor-pointer"
+            onClick={() => setStep((current) => (current + 1) % simulationSteps.length)}
+          >
+            Next
+          </Button>
+          <Link to={activeStep.href}>
+            <Button className="flex gap-1.5 px-4 py-2 h-auto rounded-md cursor-pointer">
+              {activeStep.action}
+              <ArrowRight width={18} height={18} />
+            </Button>
+          </Link>
+        </div>
       </CardContent>
     </DashboardCard>
   );
