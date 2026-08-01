@@ -303,7 +303,11 @@ export function TenderWorkspaceProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<WorkspaceState>(loadState);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch {
+      // The simulation still works in memory when browser storage is unavailable.
+    }
   }, [state]);
 
   const transitionTender = (
