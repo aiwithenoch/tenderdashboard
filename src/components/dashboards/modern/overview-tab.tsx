@@ -9,9 +9,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { CalendarDays, RefreshCcw, ScanSearch, Sun, Moon } from 'lucide-react';
+import { useTenderWorkspace } from '@/context/tender/TenderWorkspaceContext';
 
 export default function OverviewTab() {
+  const { profile, runScan } = useTenderWorkspace();
   const [greeting, setGreeting] = useState('');
+  const [scanStatus, setScanStatus] = useState('Your tender intelligence workspace is monitoring new opportunities');
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -36,17 +39,28 @@ export default function OverviewTab() {
 
   const dropdownItems = ['This Month', 'This Quarter'];
   const [selectedPeriod, setSelectedPeriod] = useState(dropdownItems[0]);
+  const firstName = profile.contactName.split(' ')[0] || 'Khensani';
+
+  const handleScan = () => {
+    const tender = runScan();
+    setScanStatus(`${tender.id} found in Rwanda with a ${tender.match}% qualification score`);
+  };
 
   return (
     <div className="flex items-center flex-wrap lg:flex-nowrap lg:gap-0 gap-4 justify-between">
       <div className="flex flex-col items-start">
         <h2 className="text-xl flex item-center gap-2">
-          {greeting}, Khensani <span className="flex items-center">{getGreetingIcon()}</span>
+          {greeting}, {firstName} <span className="flex items-center">{getGreetingIcon()}</span>
         </h2>
-        <p className="text-sm font-normal text-muted-foreground">Your tender intelligence workspace is monitoring new opportunities</p>
+        <p className="text-sm font-normal text-muted-foreground">{scanStatus}</p>
       </div>
       <div className="flex items-center lg:flex-nowrap flex-wrap gap-2">
-        <Button variant="outline" className="p-2.5 h-auto outline rounded-lg cursor-pointer" aria-label="Refresh tender data">
+        <Button
+          variant="outline"
+          className="p-2.5 h-auto outline rounded-lg cursor-pointer"
+          aria-label="Refresh tender data"
+          onClick={handleScan}
+        >
           <RefreshCcw size={16} />
         </Button>
         <Select value={selectedPeriod} onValueChange={(value) => value && setSelectedPeriod(value)}>
@@ -64,7 +78,10 @@ export default function OverviewTab() {
             ))}
           </SelectContent>
         </Select>
-        <Button className="flex items-center gap-1.5 h-auto px-4 py-2 rounded-lg cursor-pointer">
+        <Button
+          className="flex items-center gap-1.5 h-auto px-4 py-2 rounded-lg cursor-pointer"
+          onClick={handleScan}
+        >
           <ScanSearch size={16} />
           <span className="text-sm font-medium">Run Tender Scan</span>
         </Button>
