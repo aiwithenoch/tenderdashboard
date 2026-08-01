@@ -22,12 +22,12 @@ export default function TotalOrders() {
               <Clock3 size={16} />
             </div>
           </div>
-          <Button asChild variant="outline" className="flex gap-1.5 px-4 py-2 h-auto rounded-md cursor-pointer">
-            <Link to="/tenders">
+          <Link to="/tenders">
+            <Button variant="outline" className="flex gap-1.5 px-4 py-2 h-auto rounded-md cursor-pointer">
               View Deadlines
               <ArrowRight width={18} height={18} />
-            </Link>
-          </Button>
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </DashboardCard>
