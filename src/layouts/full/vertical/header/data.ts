@@ -1,10 +1,3 @@
-
-
-
-
-
-
-//   Message Data
 interface MessageType {
   title: string;
   avatar: string;
@@ -25,8 +18,8 @@ const MessagesLink: MessageType[] = [
   {
     avatar: user1,
     color: "bg-destructive",
-    title: "Michell Flintoff",
-    subtitle: "You: Yesterdy was great...",
+    title: "Compliance Team",
+    subtitle: "Insurance certificate needs updating",
     time: "just now",
     badgeColor: "bg-destructive",
     isRead: false,
@@ -34,8 +27,8 @@ const MessagesLink: MessageType[] = [
   {
     avatar: user2,
     color: "bg-primary",
-    title: "Bianca Anderson",
-    subtitle: "Nice looking dress you...",
+    title: "Tender Analyst",
+    subtitle: "A 94% opportunity match was found",
     time: "5 mins ago",
     badgeColor: "bg-primary",
     isRead: false,
@@ -43,8 +36,8 @@ const MessagesLink: MessageType[] = [
   {
     avatar: user3,
     color: "bg-secondary",
-    title: "Andrew Johnson",
-    subtitle: "Sent a photo",
+    title: "Finance Review",
+    subtitle: "Pricing schedule is ready for approval",
     time: "10 mins ago",
     badgeColor: "bg-chart-2",
     isRead: false,
@@ -52,25 +45,37 @@ const MessagesLink: MessageType[] = [
   {
     avatar: user4,
     color: "bg-chart-2",
-    title: "Jolly Cummins",
-    subtitle: "If I don't like something",
-    time: "5 days ago",
+    title: "Submission Desk",
+    subtitle: "Uganda bid submission confirmed",
+    time: "2 hours ago",
     badgeColor: "bg-chart-4",
     isRead: true,
   },
   {
     avatar: user5,
     color: "bg-chart-1",
-    title: "Josh Macklow",
-    subtitle: "$230 deducted from account",
-    time: "year ago",
+    title: "Tender Sources",
+    subtitle: "41 notices were scanned today",
+    time: "today",
     badgeColor: "bg-chart-2",
     isRead: true,
   },
 ];
 
-//   Notification Data
-import { Calendar, Settings, LucideIcon, Command, LayoutPanelLeft, Files } from 'lucide-react';
+import {
+  BellRing,
+  CheckCircle2,
+  Clock3,
+  FileCheck2,
+  FileSearch,
+  LucideIcon,
+  ShieldAlert,
+  Building2,
+  FolderLock,
+  Home,
+  Settings,
+  UserCheck,
+} from 'lucide-react';
 
 interface NotificationType {
   title: string;
@@ -83,64 +88,61 @@ interface NotificationType {
 }
 
 const Notification: NotificationType[] = [
-
   {
-    icon: Calendar,
+    icon: BellRing,
     bgcolor: "bg-chart-4/10",
     color: 'text-chart-4',
-    title: "Event Today",
-    subtitle: "Just a reminder that you have event",
-    time: "9:15 AM",
+    title: "New Tender Match",
+    subtitle: "PPE supply opportunity matched at 94%",
+    time: "Just now",
     isRead: false,
   },
   {
-    icon: Settings,
+    icon: ShieldAlert,
     bgcolor: "bg-chart-1/10",
     color: 'text-chart-1',
-    title: "Settings",
-    subtitle: "You can customize this template as you want",
-    time: "4:36 PM",
+    title: "Document Required",
+    subtitle: "Upload the updated insurance certificate",
+    time: "5 mins ago",
     isRead: false,
   },
   {
-    icon: LayoutPanelLeft,
-    bgcolor: "bg-chart-2/10 ",
+    icon: Clock3,
+    bgcolor: "bg-chart-2/10",
     color: 'text-chart-2',
-    title: "Launch Admin",
-    subtitle: "Just see the my new admin!",
-    time: "9:30 AM",
+    title: "Deadline Approaching",
+    subtitle: "Three qualified tenders close this week",
+    time: "20 mins ago",
     isRead: false,
   },
   {
-    icon: Command,
+    icon: FileCheck2,
     bgcolor: "bg-primary/5",
     color: 'text-primary',
-    title: "Launch Admin",
-    subtitle: "Just see the my new admin!",
-    time: "9:30 AM",
+    title: "Bid Package Ready",
+    subtitle: "Technical response is ready for approval",
+    time: "1 hour ago",
     isRead: false,
   },
   {
-    icon: Calendar,
-    bgcolor: "bg-chart-5/10 ",
+    icon: CheckCircle2,
+    bgcolor: "bg-chart-5/10",
     color: 'text-chart-5',
-    title: "Event Today",
-    subtitle: "Just a reminder that you have event",
-    time: "9:15 AM",
-    isRead: false,
+    title: "Submission Confirmed",
+    subtitle: "Safety workwear bid was submitted successfully",
+    time: "Today",
+    isRead: true,
   },
   {
-    icon: Settings,
+    icon: FileSearch,
     bgcolor: "bg-chart-1/10",
     color: 'text-chart-1',
-    title: "Settings",
-    subtitle: "You can customize this template as you want",
-    time: "4:36 PM",
+    title: "Source Scan Complete",
+    subtitle: "41 notices reviewed and 23 qualified",
+    time: "Today",
     isRead: true,
   },
 ];
-
-
 
 interface profileType {
   avatar: LucideIcon;
@@ -149,45 +151,40 @@ interface profileType {
   badge: boolean;
 }
 
-import { Home, User, Keyboard } from 'lucide-react';
-
 const profileDD: profileType[] = [
   {
     avatar: Home,
-    title: 'Home',
+    title: 'Dashboard',
     href: '/',
-    badge: false
+    badge: false,
   },
   {
-    avatar: User,
-    title: 'Profile',
-    href: '/',
-    badge: false
+    avatar: Building2,
+    title: 'Company Profile',
+    href: '/company-profile',
+    badge: false,
   },
   {
-    avatar: Files,
-    title: 'Invoice',
-    href: '/',
-    badge: true
+    avatar: FolderLock,
+    title: 'Document Vault',
+    href: '/documents',
+    badge: true,
   },
   {
-    avatar: Keyboard,
-    title: 'Subscription',
-    href: '/',
-    badge: false
+    avatar: UserCheck,
+    title: 'Approvals',
+    href: '/approvals',
+    badge: true,
   },
   {
     avatar: Settings,
-    title: 'Account Settings',
-    href: '/',
-    badge: false
-  }
+    title: 'System Settings',
+    href: '/settings',
+    badge: false,
+  },
 ];
 
 export {
-
-
-
   MessagesLink,
   Notification,
   profileDD,
