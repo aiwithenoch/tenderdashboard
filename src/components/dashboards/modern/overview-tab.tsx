@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -11,60 +11,63 @@ import {
 import { CalendarDays, RefreshCcw, ScanSearch, Sun, Moon } from 'lucide-react';
 import { useTenderWorkspace } from '@/context/tender/TenderWorkspaceContext';
 
+const dropdownItems = ['This Month', 'This Quarter'];
+
+function getGreeting() {
+  const hour = new Date().getHours();
+
+  if (hour >= 5 && hour < 12) return 'Good Morning';
+  if (hour >= 12 && hour < 17) return 'Good Afternoon';
+  if (hour >= 17 && hour < 21) return 'Good Evening';
+  return 'Good Night';
+}
+
 export default function OverviewTab() {
   const { profile, runScan } = useTenderWorkspace();
-  const [greeting, setGreeting] = useState('');
-  const [scanStatus, setScanStatus] = useState('Your tender intelligence workspace is monitoring new opportunities');
-
-  useEffect(() => {
-    const hour = new Date().getHours();
-
-    if (hour >= 5 && hour < 12) {
-      setGreeting('Good Morning');
-    } else if (hour >= 12 && hour < 17) {
-      setGreeting('Good Afternoon');
-    } else if (hour >= 17 && hour < 21) {
-      setGreeting('Good Evening');
-    } else {
-      setGreeting('Good Night');
-    }
-  }, []);
-
-  const getGreetingIcon = () => {
-    if (greeting === 'Good Morning' || greeting === 'Good Afternoon') {
-      return <Sun size={25} color="orange" />;
-    }
-    return <Moon size={25} />;
-  };
-
-  const dropdownItems = ['This Month', 'This Quarter'];
+  const [greeting] = useState(getGreeting);
+  const [scanStatus, setScanStatus] = useState(
+    'Your tender intelligence workspace is monitoring new opportunities',
+  );
   const [selectedPeriod, setSelectedPeriod] = useState(dropdownItems[0]);
-  const firstName = profile.contactName.split(' ')[0] || 'Khensani';
+  const firstName = profile.contactName.trim().split(/\s+/)[0] || 'Ama';
+
+  const GreetingIcon =
+    greeting === 'Good Morning' || greeting === 'Good Afternoon' ? Sun : Moon;
 
   const handleScan = () => {
     const tender = runScan();
-    setScanStatus(`${tender.id} found in Rwanda with a ${tender.match}% qualification score`);
+    setScanStatus(
+      `${tender.id} is available in Rwanda with a ${tender.match}% qualification score`,
+    );
   };
 
   return (
-    <div className="flex items-center flex-wrap lg:flex-nowrap lg:gap-0 gap-4 justify-between">
-      <div className="flex flex-col items-start">
-        <h2 className="text-xl flex item-center gap-2">
-          {greeting}, {firstName} <span className="flex items-center">{getGreetingIcon()}</span>
+    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="min-w-0">
+        <h2 className="flex flex-wrap items-center gap-2 text-xl">
+          <span>
+            {greeting}, {firstName}
+          </span>
+          <GreetingIcon size={22} className="shrink-0 text-muted-foreground" />
         </h2>
-        <p className="text-sm font-normal text-muted-foreground">{scanStatus}</p>
+        <p className="mt-1 text-sm font-normal text-muted-foreground">{scanStatus}</p>
       </div>
-      <div className="flex items-center lg:flex-nowrap flex-wrap gap-2">
+
+      <div className="flex w-full flex-wrap items-center gap-2 lg:w-auto lg:flex-nowrap">
         <Button
           variant="outline"
-          className="p-2.5 h-auto outline rounded-lg cursor-pointer"
+          className="h-9 w-9 shrink-0 rounded-lg p-0"
           aria-label="Refresh tender data"
           onClick={handleScan}
         >
           <RefreshCcw size={16} />
         </Button>
-        <Select value={selectedPeriod} onValueChange={(value) => value && setSelectedPeriod(value)}>
-          <SelectTrigger className="w-fit h-auto! text-foreground cursor-pointer">
+
+        <Select
+          value={selectedPeriod}
+          onValueChange={(value) => value && setSelectedPeriod(value)}
+        >
+          <SelectTrigger className="h-9 min-w-36 flex-1 cursor-pointer text-foreground sm:flex-none">
             <div className="flex items-center gap-2">
               <CalendarDays size={16} />
               <SelectValue />
@@ -78,8 +81,9 @@ export default function OverviewTab() {
             ))}
           </SelectContent>
         </Select>
+
         <Button
-          className="flex items-center gap-1.5 h-auto px-4 py-2 rounded-lg cursor-pointer"
+          className="h-9 flex-1 gap-1.5 rounded-lg px-4 sm:flex-none"
           onClick={handleScan}
         >
           <ScanSearch size={16} />
