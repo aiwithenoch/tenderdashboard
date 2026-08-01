@@ -18,11 +18,13 @@
 
 ## Introduction 📊
 
-Shadcn Dashboard is built with React (Vite), a production-ready admin dashboard starter to kickstart your next project. It features a modern dashboard, Blog, Notes & Tickets apps, authentication flows, form layouts with validation, data tables, user profile pages, and a comprehensive library of Shadcn UI components.
+Shadcn Dashboard is a production-ready admin dashboard starter to kickstart your next project. It features a modern dashboard, Blog, Notes & Tickets apps, authentication flows, form layouts with validation, data tables, user profile pages, and a comprehensive library of Shadcn UI components.
 
-[View Demo (React)](https://shadcndashboard-demo.vercel.app)
+Available in both **React (Vite)** and **Next.js** versions!
 
-[View Documentation](https://shadcndashboard.dev/docs)
+- [View Demo (React)](https://shadcndashboard-demo.vercel.app)
+- [Next.js Free Version Repository](https://github.com/shadcndashboard/next-shadcn-dashboard)
+- [View Documentation](https://shadcndashboard.dev/docs)
 
 <p>
    Crafted with ❤️ by
@@ -147,7 +149,7 @@ Shadcn Dashboard is built with React (Vite), a production-ready admin dashboard 
    npm install
    ```
 
-3. **Start the development server:**
+2. **Start the development server:**
 
    ```bash
    npm run dev
@@ -155,13 +157,13 @@ Shadcn Dashboard is built with React (Vite), a production-ready admin dashboard 
 
    The site will be available at `http://localhost:5173`
 
-4. **Build for production:**
+3. **Build for production:**
 
    ```bash
    npm run build
    ```
 
-5. **Preview the production build:**
+4. **Preview the production build:**
 
    ```bash
    npm run preview
@@ -247,6 +249,7 @@ These projects form the backbone of Shadcn Dashboard.
 - [Shadcn Dashboard Website](https://shadcndashboard.dev)
 - [Documentation](https://shadcndashboard.dev/docs)
 - [React Demo](https://shadcndashboard-demo.vercel.app/)
+- [Next.js Free Version (GitHub Repository)](https://github.com/shadcndashboard/next-shadcn-dashboard)
 - [Changelog](CHANGELOG.md)
 - [License](LICENSE)
 
