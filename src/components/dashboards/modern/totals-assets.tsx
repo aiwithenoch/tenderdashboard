@@ -1,7 +1,7 @@
 'use client'
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DashboardCard } from '../../shared/dashboard-card';
-import { CheckCircle2, FileText, FolderWarning, Layers3, SearchCheck } from 'lucide-react';
+import { CheckCircle2, FileText, FileWarning, Layers3, SearchCheck } from 'lucide-react';
 
 const assetsData = [
   {
@@ -23,7 +23,7 @@ const assetsData = [
     title: 'Missing Documents',
     href: '/documents',
     value: '2',
-    icon: FolderWarning,
+    icon: FileWarning,
   },
   {
     id: 'Won',
