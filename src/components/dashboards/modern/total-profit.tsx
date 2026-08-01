@@ -4,8 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
+import { useTenderWorkspace } from "@/context/tender/TenderWorkspaceContext";
 
 export default function TotalProfit() {
+  const { stats } = useTenderWorkspace();
+
   return (
     <DashboardCard className="py-6">
       <CardContent className="flex justify-between flex-row px-6">
@@ -14,8 +17,8 @@ export default function TotalProfit() {
             <div className="flex flex-col gap-1">
               <p className="text-sm font-normal text-foreground">Waiting Approval</p>
               <div className="flex items-center gap-2">
-                <h3 className="text-2xl font-semibold">4</h3>
-                <Badge variant="destructive">2 today</Badge>
+                <h3 className="text-2xl font-semibold">{stats.approvals}</h3>
+                <Badge variant="destructive">{stats.readyToSubmit} approved</Badge>
               </div>
             </div>
             <div className="border border-border p-2.5 w-fit rounded-md">
