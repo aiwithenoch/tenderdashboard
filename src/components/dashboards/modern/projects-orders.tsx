@@ -36,6 +36,15 @@ const statusConfig: Record<TenderStage, { label: string; bg: string; text: strin
 
 const avatars = [avatar2, avatar3, avatar7, avatar6, avatar4, avatar1];
 
+function getAvatar(tender: Tender) {
+  const index = Array.from(tender.id).reduce(
+    (total, character) => total + character.charCodeAt(0),
+    0,
+  );
+
+  return avatars[index % avatars.length];
+}
+
 type SortKey = 'tender' | 'owner' | 'status' | 'value' | 'deadline';
 type SortDirection = 'asc' | 'desc';
 
@@ -184,7 +193,7 @@ export default function ProjectsOrders() {
                 </TableHeader>
 
                 <TableBody>
-                  {sortedTenders.map((tender, index) => {
+                  {sortedTenders.map((tender) => {
                     const status = statusConfig[tender.stage];
                     const isComplete = tender.stage === 'won' || tender.stage === 'declined';
 
@@ -204,7 +213,7 @@ export default function ProjectsOrders() {
                         <TableCell className="px-4 py-3 align-middle">
                           <div className="flex min-w-0 items-center gap-3">
                             <img
-                              src={avatars[index % avatars.length]}
+                              src={getAvatar(tender)}
                               alt={tender.owner}
                               width={30}
                               height={30}
