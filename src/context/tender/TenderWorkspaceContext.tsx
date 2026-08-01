@@ -97,7 +97,7 @@ type TenderWorkspaceValue = WorkspaceState & {
   resetDemo: () => void;
 };
 
-const STORAGE_KEY = 'tenderpilot-workspace-v1';
+const STORAGE_KEY = 'tenderpilot-workspace-v2';
 
 const initialTenders: Tender[] = [
   {
@@ -221,7 +221,7 @@ const initialProfile: CompanyProfile = {
   companyName: 'Ubuntu Build & Safety Ltd.',
   registrationNumber: '2021/084126/07',
   country: 'South Africa',
-  contactName: 'Khensani Ndlozi',
+  contactName: 'Ama Serwaa Mensah',
   email: 'tenders@ubuntubuild.co.za',
   phone: '+27 11 555 0194',
   sectors: 'PPE, facilities management, industrial cleaning, fire safety',
@@ -237,14 +237,17 @@ const initialSettings: WorkspaceSettings = {
 
 function createInitialState(): WorkspaceState {
   return {
-    tenders: initialTenders.map((tender) => ({ ...tender })),
+    tenders: initialTenders.map((tender) => ({
+      ...tender,
+      missingDocuments: [...tender.missingDocuments],
+    })),
     documents: initialDocuments.map((document) => ({ ...document })),
     profile: { ...initialProfile },
     settings: { ...initialSettings },
     activity: [
       {
         id: 'activity-1',
-        message: 'Khensani Ndlozi approved the Kenya security bid package.',
+        message: 'Ama Serwaa Mensah approved the Kenya security bid package.',
         at: '10:42 AM',
       },
       {
@@ -261,10 +264,26 @@ function createInitialState(): WorkspaceState {
   };
 }
 
+function isWorkspaceState(value: unknown): value is WorkspaceState {
+  if (!value || typeof value !== 'object') return false;
+  const candidate = value as Partial<WorkspaceState>;
+
+  return (
+    Array.isArray(candidate.tenders) &&
+    Array.isArray(candidate.documents) &&
+    Array.isArray(candidate.activity) &&
+    Boolean(candidate.profile && typeof candidate.profile === 'object') &&
+    Boolean(candidate.settings && typeof candidate.settings === 'object')
+  );
+}
+
 function loadState(): WorkspaceState {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? (JSON.parse(saved) as WorkspaceState) : createInitialState();
+    if (!saved) return createInitialState();
+
+    const parsed: unknown = JSON.parse(saved);
+    return isWorkspaceState(parsed) ? parsed : createInitialState();
   } catch {
     return createInitialState();
   }
@@ -287,19 +306,25 @@ export function TenderWorkspaceProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state]);
 
-  const updateTender = (
+  const transitionTender = (
     id: string,
-    stage: TenderStage,
+    allowedStages: TenderStage[],
+    nextStage: TenderStage,
     lastAction: string,
-    message: string,
+    message: (tender: Tender, current: WorkspaceState) => string,
   ) => {
-    setState((current) => ({
-      ...current,
-      tenders: current.tenders.map((tender) =>
-        tender.id === id ? { ...tender, stage, lastAction } : tender,
-      ),
-      activity: [activity(message), ...current.activity].slice(0, 12),
-    }));
+    setState((current) => {
+      const tender = current.tenders.find((item) => item.id === id);
+      if (!tender || !allowedStages.includes(tender.stage)) return current;
+
+      return {
+        ...current,
+        tenders: current.tenders.map((item) =>
+          item.id === id ? { ...item, stage: nextStage, lastAction } : item,
+        ),
+        activity: [activity(message(tender, current)), ...current.activity].slice(0, 12),
+      };
+    });
   };
 
   const runScan = () => {
@@ -338,101 +363,118 @@ export function TenderWorkspaceProvider({ children }: { children: ReactNode }) {
   };
 
   const addToApplications = (id: string) => {
-    const tender = state.tenders.find((item) => item.id === id);
-    if (!tender) return;
-    updateTender(
+    transitionTender(
       id,
+      ['discovered'],
       'application',
       'Application workspace opened',
-      `${tender.owner} moved ${id} into applications.`,
+      (tender) => `${tender.owner} moved ${id} into applications.`,
     );
   };
 
   const prepareApplication = (id: string) => {
-    const tender = state.tenders.find((item) => item.id === id);
-    if (!tender) return;
-    updateTender(
+    transitionTender(
       id,
+      ['application'],
       'approval',
       'AI prepared the technical and compliance package',
-      `${tender.owner} prepared ${id} for management approval.`,
+      (tender) => `${tender.owner} prepared ${id} for management approval.`,
     );
   };
 
   const approveTender = (id: string) => {
-    const tender = state.tenders.find((item) => item.id === id);
-    if (!tender) return;
-    updateTender(
+    transitionTender(
       id,
+      ['approval'],
       'approved',
       'Management approval recorded',
-      `Khensani Ndlozi approved ${id} for submission.`,
+      (_tender, current) =>
+        `${current.profile.contactName || 'Ama Serwaa Mensah'} approved ${id} for submission.`,
     );
   };
 
   const declineTender = (id: string) => {
-    const tender = state.tenders.find((item) => item.id === id);
-    if (!tender) return;
-    updateTender(
+    transitionTender(
       id,
+      ['approval'],
       'declined',
       'Bid declined after management review',
-      `Thabo Mokoena declined ${id} after bid/no-bid review.`,
+      () => `Thabo Mokoena declined ${id} after bid/no-bid review.`,
     );
   };
 
   const submitTender = (id: string) => {
-    const tender = state.tenders.find((item) => item.id === id);
-    if (!tender) return;
-    updateTender(
+    transitionTender(
       id,
+      ['approved'],
       'submitted',
       'Submission receipt and timestamp saved',
-      `${tender.owner} submitted ${id} and saved the receipt.`,
+      (tender) => `${tender.owner} submitted ${id} and saved the receipt.`,
     );
   };
 
   const markWon = (id: string) => {
-    const tender = state.tenders.find((item) => item.id === id);
-    if (!tender) return;
-    updateTender(
+    transitionTender(
       id,
+      ['submitted'],
       'won',
       'Contract award recorded',
-      `Kwame Asante marked ${id} as won.`,
+      () => `Kwame Asante marked ${id} as won.`,
     );
   };
 
   const addDocument = (name: string) => {
-    const extension = name.split('.').pop()?.toUpperCase() ?? 'FILE';
-    const document: DocumentRecord = {
-      id: `doc-${Date.now()}`,
-      name,
-      type: extension,
-      status: 'Valid',
-      updatedAt: new Date().toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      }),
-    };
+    const normalizedName = name.trim();
+    if (!normalizedName) return;
 
-    setState((current) => ({
-      ...current,
-      documents: [document, ...current.documents],
-      activity: [
-        activity(`Efua Boateng uploaded ${name} to the document vault.`),
-        ...current.activity,
-      ].slice(0, 12),
-    }));
+    const extension = normalizedName.split('.').pop()?.toUpperCase() ?? 'FILE';
+    const updatedAt = new Date().toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+
+    setState((current) => {
+      const existing = current.documents.find(
+        (document) => document.name.toLowerCase() === normalizedName.toLowerCase(),
+      );
+
+      const documents = existing
+        ? current.documents.map((document) =>
+            document.id === existing.id
+              ? { ...document, status: 'Valid' as const, updatedAt }
+              : document,
+          )
+        : [
+            {
+              id: `doc-${Date.now()}`,
+              name: normalizedName,
+              type: extension,
+              status: 'Valid' as const,
+              updatedAt,
+            },
+            ...current.documents,
+          ];
+
+      return {
+        ...current,
+        documents,
+        activity: [
+          activity(`Efua Boateng uploaded ${normalizedName} to the document vault.`),
+          ...current.activity,
+        ].slice(0, 12),
+      };
+    });
   };
 
   const updateProfile = (profile: CompanyProfile) => {
+    const contactName = profile.contactName.trim() || 'Ama Serwaa Mensah';
+
     setState((current) => ({
       ...current,
-      profile,
+      profile: { ...profile, contactName },
       activity: [
-        activity('Khensani Ndlozi updated the company profile.'),
+        activity(`${contactName} updated the company profile.`),
         ...current.activity,
       ].slice(0, 12),
     }));
